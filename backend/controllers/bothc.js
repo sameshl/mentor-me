@@ -1,24 +1,13 @@
-// Handle authentication of users
-
-const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
-const verify = require('../utils/verifyToken')
 
 const {
   registerValidation,
   loginValidation
 } = require('../utils/validation')
 
-// Checks whitespaces in username (even white spaces like tab)
-function hasWhiteSpace (s) {
-  return /\s/g.test(s)
-}
-
-// @route   POST /user/register
-// @desc    Register user
-router.post('/register', async (req, res) => {
+exports.register = async (req, res) => {
   // Validate the register data
   const {
     error
@@ -50,12 +39,6 @@ router.post('/register', async (req, res) => {
     })
   }
 
-  if (hasWhiteSpace(req.body.name)) {
-    return res.status(400).json({
-      error: 'Username cannot contain a whitespace'
-    })
-  }
-
   // Hash passwords
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
@@ -78,11 +61,9 @@ router.post('/register', async (req, res) => {
       error: err
     })
   }
-})
+}
 
-// @route   POST /user/login
-// @desc    Login user
-router.post('/login', async (req, res) => {
+exports.login = async (req, res) => {
   // Validate the login data
   const {
     error
@@ -122,20 +103,4 @@ router.post('/login', async (req, res) => {
     userId: user._id,
     'auth-token': token
   })
-})
-
-// @route   GET /user/dashboard
-// @desc    Dashboard for the logged in  user ( private route )
-// expects 'auth-token' and 'userId' in header of request
-router.get('/dashboard', verify, async (req, res) => {
-  const userId = req.header('userId')
-  if (!userId) return res.status(500).json({ error: 'userId not provided' })
-  try {
-    const user = await User.findById(userId)
-    res.json(user)
-  } catch (err) {
-    res.status(500).json({ error: 'User not found' })
-  }
-})
-
-module.exports = router
+}

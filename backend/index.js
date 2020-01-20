@@ -9,8 +9,6 @@ const connectDB = require('./config/db')
 
 const app = express()
 
-
-
 // Connect to database
 connectDB()
 
@@ -18,9 +16,8 @@ connectDB()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// Define Routes
-app.use('/user', require('./routes/user'))
-app.use('/user/login/google', require('./routes/googleAuth'))
+require('../backend/routes/mentor.js')(app)
+require('../backend/routes/mentee.js')(app)
 
 const PORT = process.env.PORT || 5000
 
