@@ -12,12 +12,8 @@ exports.match = (skills) => {
 
 async function find (skills) {
   // findOne will return only the first document it checks correctly so there can be better solutions.
-  try {
-    const mentor = await Mentor.findOne({ skills: { $all: skills } })
-    return mentor._id
-  } catch (err) {
-    return null
-  }
+  const mentor = await Mentor.findOne({ skills: { $all: skills } })
+  return mentor._id
 }
 
 /* async function findv2 (skills) {

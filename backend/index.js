@@ -16,8 +16,8 @@ connectDB()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-require('../backend/routes/mentor.js')(app)
-require('../backend/routes/mentee.js')(app)
+require('../backend/routes/mentor.js')()
+require('../backend/routes/mentee.js')()
 
 const PORT = process.env.PORT || 5000
 

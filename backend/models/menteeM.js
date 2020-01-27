@@ -1,14 +1,15 @@
 const mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
-const MentorID = new mongoose.Schema({
+const MentorID = new Schema({
   mentorid: String
 })
 
-const Skills = new mongoose.Schema({
+const Skills = new Schema({
   menteeskills: String
 })
 
-const menteeSchema = new mongoose.Schema({
+const menteeSchema = new Schema({
   name: {
     type: String,
     required: true,
