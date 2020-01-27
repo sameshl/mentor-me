@@ -1,0 +1,4 @@
+{
+    "mongoURI": "mongodb://localhost:27017/mentor-me",   
+    "tokenSecret": "extremely_secret_key"
+}
