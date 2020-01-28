@@ -82,7 +82,8 @@ exports.googlelogin = async (req, res) => {
     return res.status(200).json({
       success: true,
       userId: mentee._id,
-      authToken: token
+      authToken: token,
+      msg: 'Sign-in succesful!'
     })
   }
 }
@@ -126,7 +127,8 @@ exports.googleandroidlogin = async (req, res) => {
     return res.status(200).json({
       success: true,
       userId: mentee._id,
-      authToken: token
+      authToken: token,
+      msg: 'Sign-in succesful!'
     })
   }
 }
@@ -194,7 +196,8 @@ exports.register = async (req, res) => {
     return res.status(200).json({
       success: true,
       userId: user._id,
-      authToken: token
+      authToken: token,
+      msg: 'Registration succesful!'
     })
   } catch (err) {
     return res.status(200).json({
@@ -246,6 +249,7 @@ exports.login = async (req, res) => {
   res.json({
     success: true,
     userId: user._id,
-    authToken: token
+    authToken: token,
+    msg: 'Login succesful!'
   })
 }
