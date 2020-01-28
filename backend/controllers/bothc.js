@@ -1,8 +1,8 @@
-const Mentor = require('../models/mentorM')
-const Mentee = require('../models/menteeM')
+/* const Mentor = require('../models/mentorM')
+const Mentee = require('../models/menteeM') */
 const google = require('../utils/googleAuthentication')
 
-exports.chatbox = async (req, res) => {
+/* exports.chatbox = async (req, res) => {
   // 1.The mentor has accepted the request.
   // 2.The chat is initiated.
   // 3.mentorID is Id of the mentor matched to the mentee and its value is saved in the mentee database.
@@ -23,5 +23,11 @@ exports.chatbox = async (req, res) => {
     // Remove the mentors and mentees from each others list
   }
 }
-
-exports.googleapi = google.googleapi()
+ */
+exports.googleapi = async (req, res) => {
+  try {
+    google.googleapi(req, res)
+  } catch (err) {
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+}

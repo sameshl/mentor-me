@@ -14,14 +14,14 @@ module.exports = () => {
   router.get('/mentor/dashboard', verify, mentor.dashboard)
 
   // Initiate chat
-  router.get('/mentor/chatbox', verify, both.chatbox)
+  // router.get('/mentor/chatbox', verify, both.chatbox)
 
   // Delete account
   router.delete('/mentor/deleteacc', verify, mentor.deleteacc)
 
   // @route   GET api/login/google/
   // @desc    route for google Oauth 2 login
-  router.get('/google', both.google)
+  router.get('/google', both.googleapi)
 
   // @route   GET api/login/google/auth/google/callback
   // @desc    route for getting user data and redirecting to dashboard

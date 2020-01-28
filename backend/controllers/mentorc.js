@@ -1,4 +1,4 @@
-const Mentor = require('../models/MentorM')
+const Mentor = require('../models/mentorM')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const google = require('../utils/googleAuthentication')

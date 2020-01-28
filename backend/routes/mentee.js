@@ -18,14 +18,14 @@ module.exports = () => {
   router.post('/mentee/newmentor', verify, mentee.query)
 
   // Initiate chatbox
-  router.get('/mentee/chatbox', verify, both.chatox)
+  // router.get('/mentee/chatbox', verify, both.chatox)
 
   // Delete account
   router.delete('/mentee/deleteacc', verify, mentee.deleteacc)
 
   // @route   GET api/login/google/
   // @desc    route for google Oauth 2 login
-  router.get('/google', both.google)
+  router.get('/google', both.googleapi)
 
   // @route   GET api/login/google/auth/google/callback
   // @desc    route for getting user data and redirecting to dashboard
