@@ -5,14 +5,14 @@ const google = require('../utils/googleAuthentication')
 
 // This function sends the user data of the user logged in
 exports.dashboard = async (req, res) => {
-  const userId = req.header('userId')
-  if (!userId) return res.status(500).json({ error: 'userId not provided' })
+  const userId = req.header('mentorId')
+  if (!userId) return res.status(200).json({ success: false, msg: 'userId not provided' })
   try {
     const mentor = await Mentor.findbyId(userId)
     // Only the information shown in the dashboard is too be passed
-    return res.status(200).json(mentor)
+    return res.status(200).json({ success: true }, mentor)
   } catch (err) {
-    return res.status(500).json({ error: 'User not found' })
+    return res.status(200).json({ success: false, msg: 'User not found' })
   }
 }
 
@@ -20,10 +20,10 @@ exports.dashboard = async (req, res) => {
 exports.deleteacc = async (req, res) => {
   try {
     const mentee = await Mentor.deleteOne({ _id: req.body('mentorID') })
-    if (mentee) return res.status(200).json('Mentor deleted')
-    return res.status(400).json({ error: 'Mentor not found' })
+    if (mentee) return res.status(200).json({ success: true, msg: 'Mentor deleted' })
+    return res.status(200).json({ success: false, msg: 'Mentor not found' })
   } catch (err) {
-    return res.status(500).json({ error: 'Server error' })
+    return res.status(200).json({ success: false, msg: 'Server error' })
   }
 }
 
@@ -33,7 +33,7 @@ exports.googlelogin = async (req, res) => {
   if (code) {
     const me = google.googleauth(code)
 
-    if (!me) { return res.status(400).json({ error: 'User not found' }) }
+    if (!me) { return res.status(200).json({ success: false, msg: 'User not found' }) }
 
     const userName = me.data.names[0].displayName
     const userEmail = me.data.emailAddresses[0].value
@@ -53,7 +53,7 @@ exports.googlelogin = async (req, res) => {
       try {
         await user.save()
       } catch (err) {
-        return res.status(400).json({ error: err })
+        return res.status(200).json({ success: false, msg: 'Server error. User not saved.' })
       }
     }
 
@@ -63,9 +63,10 @@ exports.googlelogin = async (req, res) => {
     })
 
     const token = google.token(mentee)
-    return res.json({
+    return res.status(200).json({
+      success: true,
       userId: mentee._id,
-      'auth-token': token
+      authToken: token
     })
   }
 }
@@ -76,7 +77,7 @@ exports.googleandroidlogin = async (req, res) => {
   if (code) {
     const me = google.googleandroidauth(code)
 
-    if (!me) { return res.status(400).json({ error: 'User not found' }) }
+    if (!me) { return res.status(200).json({ success: false, msg: 'User not found' }) }
 
     const userName = me.data.names[0].displayName
     const userEmail = me.data.emailAddresses[0].value
@@ -96,7 +97,7 @@ exports.googleandroidlogin = async (req, res) => {
       try {
         await mentor.save()
       } catch (err) {
-        return res.status(400).json({ error: err })
+        return res.status(200).json({ success: false, msg: 'Server error. User not saved.' })
       }
     }
 
@@ -106,9 +107,10 @@ exports.googleandroidlogin = async (req, res) => {
     })
 
     const token = google.token(mentor)
-    return res.json({
+    return res.status(200).json({
+      success: true,
       userId: mentor._id,
-      'auth-token': token
+      authToken: token
     })
   }
 }
@@ -125,8 +127,9 @@ exports.register = async (req, res) => {
   } = registerValidation(req.body)
 
   if (error) {
-    return res.status(500).json({
-      error: error.details[0].message
+    return res.status(200).json({
+      success: false,
+      msg: error.details[0].message
     })
   }
   // Check if user already exists
@@ -135,8 +138,9 @@ exports.register = async (req, res) => {
   })
 
   if (emailExist) {
-    return res.status(400).json({
-      error: 'Email already exists'
+    return res.status(200).json({
+      success: false,
+      msg: 'Email already exists'
     })
   }
 
@@ -145,8 +149,9 @@ exports.register = async (req, res) => {
   })
 
   if (nameExist) {
-    return res.status(400).json({
-      error: 'Username already exists'
+    return res.status(200).json({
+      success: false,
+      msg: 'Username already exists'
     })
   }
 
@@ -165,13 +170,20 @@ exports.register = async (req, res) => {
 
   try {
     await user.save()
-
+    // Create and assign a token
+    const TOKEN_SECRET = process.env.TOKEN_SECRET
+    const token = jwt.sign({
+      _id: user._id
+    }, TOKEN_SECRET)
     return res.status(200).json({
-      msg: 'Registration successful!'
+      success: true,
+      userId: user._id,
+      authToken: token
     })
   } catch (err) {
-    return res.status(400).json({
-      error: err
+    return res.status(200).json({
+      success: false,
+      msg: 'Registration unsuccesful.'
     })
   }
 }
@@ -183,8 +195,9 @@ exports.login = async (req, res) => {
   } = loginValidation(req.body)
 
   if (error) {
-    return res.status(400).json({
-      error: error.details[0].message
+    return res.status(200).json({
+      success: false,
+      msg: error.details[0].message
     })
   }
 
@@ -194,16 +207,18 @@ exports.login = async (req, res) => {
   })
 
   if (!user) {
-    return res.status(400).json({
-      error: 'Email or the password is wrong'
+    return res.status(200).json({
+      success: false,
+      msg: 'Email or the password is wrong'
     })
   }
 
   // Check if password is correct
   const validPass = await bcrypt.compare(req.body.password, user.password)
   if (!validPass) {
-    return res.status(400).json({
-      error: 'Email or the password is wrong'
+    return res.status(200).json({
+      success: false,
+      msg: 'Email or the password is wrong'
     })
   }
 
@@ -212,8 +227,9 @@ exports.login = async (req, res) => {
   const token = jwt.sign({
     _id: user._id
   }, TOKEN_SECRET)
-  res.json({
+  res.status(200).json({
+    success: true,
     userId: user._id,
-    'auth-token': token
+    authToken: token
   })
 }
