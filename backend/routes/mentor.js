@@ -1,34 +1,35 @@
 // Set of apis for the mentor side
-module.exports = () => {
-  const mentor = require('../controllers/mentorc')
-  const both = require('../controllers/bothc')
-  const verify = require('../utils/verifyToken')
-  const router = require('express').Router()
-  // Registration for mentors
-  router.post('/mentor/register', mentor.register)
+const mentor = require('../controllers/mentorc')
+const both = require('../controllers/bothc')
+const verify = require('../utils/verifyToken')
+const router = require('express').Router()
 
-  // Login for mentors
-  router.post('/mentor/login', mentor.login)
+// Registration for mentors
+router.post('/register', mentor.register)
 
-  // Dashboard for mentor
-  router.get('/mentor/dashboard', verify, mentor.dashboard)
+// Login for mentors
+router.post('/login', mentor.login)
 
-  // Initiate chat
-  // router.get('/mentor/chatbox', verify, both.chatbox)
+// Dashboard for mentor
+router.get('/dashboard', verify, mentor.dashboard)
 
-  // Delete account
-  router.delete('/mentor/deleteacc', verify, mentor.deleteacc)
+// Initiate chat
+// router.get('/mentor/chatbox', verify, both.chatbox)
 
-  // @route   GET api/login/google/
-  // @desc    route for google Oauth 2 login
-  router.get('/google', both.googleapi)
+// Delete account
+router.delete('/deleteacc', verify, mentor.deleteacc)
 
-  // @route   GET api/login/google/auth/google/callback
-  // @desc    route for getting user data and redirecting to dashboard
-  router.get('/auth/google/callback', mentor.googlelogin)
+// @route   GET api/login/google/
+// @desc    route for google Oauth 2 login
+router.get('/google', both.googleapi)
 
-  // @route   POST api/login/google/android
-  // @desc    route for android client to send oauth tokens in body
-  //          and get user id and json web token in response
-  router.post('/android', mentor.googleandroidlogin)
-}
+// @route   GET api/login/google/auth/google/callback
+// @desc    route for getting user data and redirecting to dashboard
+router.get('/auth/google/callback', mentor.googlelogin)
+
+// @route   POST api/login/google/android
+// @desc    route for android client to send oauth tokens in body
+//          and get user id and json web token in response
+router.post('/android', mentor.googleandroidlogin)
+
+module.exports = router
