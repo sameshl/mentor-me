@@ -1,7 +1,7 @@
 const Mentor = require('../models/mentorM')
 // Better matching algorithms are to be updated here.
-exports.match = (skills) => {
-  const mentorid = find(skills)
+exports.match = async (skills) => {
+  const mentorid = await find(skills)
   if (mentorid) {
     return mentorid
   } else {

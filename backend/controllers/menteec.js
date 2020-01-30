@@ -134,20 +134,35 @@ exports.googleandroidlogin = async (req, res) => {
 }
 
 const {
-  registerValidation,
-  loginValidation
+  emailValidation,
+  nameValidation,
+  passwordValidation
 } = require('../utils/validation')
 
 exports.register = async (req, res) => {
   // Validate the register data
-  const {
-    error
-  } = registerValidation(req.body)
+  const erroremail = emailValidation(req.body)
+  const errorname = nameValidation(req.body)
+  const errorpassword = passwordValidation(req.body)
 
-  if (error) {
+  if (erroremail) {
     return res.status(200).json({
       success: false,
-      msg: error.details[0].message
+      msg: 'The email field entered is either blank or not a valid email.'
+    })
+  }
+
+  if (errorname) {
+    return res.status(200).json({
+      success: false,
+      msg: 'The name field entered is incorrect. The name should be atleast 2 digits long'
+    })
+  }
+
+  if (errorpassword) {
+    return res.status(200).json({
+      success: false,
+      msg: 'The password field entered is incorrect. The password should be atleast 6 digits long.'
     })
   }
   // Check if user already exists
@@ -169,7 +184,7 @@ exports.register = async (req, res) => {
   if (nameExist) {
     return res.status(200).json({
       success: false,
-      msg: 'Username already exists'
+      msg: 'Name already exists'
     })
   }
 
@@ -209,14 +224,20 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   // Validate the login data
-  const {
-    error
-  } = loginValidation(req.body)
+  const erroremail = emailValidation(req.body)
+  const errorpassword = passwordValidation(req.body)
 
-  if (error) {
+  if (erroremail) {
     return res.status(200).json({
       success: false,
-      msg: error.details[0].message
+      msg: 'The email field entered is either blank or not a valid email.'
+    })
+  }
+
+  if (errorpassword) {
+    return res.status(200).json({
+      success: false,
+      msg: 'The password field entered is incorrect. The password should be atleast 6 digits long.'
     })
   }
 
