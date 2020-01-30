@@ -16,7 +16,7 @@ connectDB()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.use('/api/mentor', require('./routes/mentee'))
+app.use('/api/mentor', require('./routes/mentor'))
 app.use('/api/mentee', require('./routes/mentee'))
 
 const PORT = process.env.PORT || 5000

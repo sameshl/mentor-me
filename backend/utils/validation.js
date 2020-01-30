@@ -26,26 +26,29 @@ module.exports.registerValidation = registerValidation
 module.exports.loginValidation = loginValidation */
 
 const emailValidation = (data) => {
+  const emailobj = { email: data.email }
   const schema = Joi.object({
     email: Joi.string().min(6).email().required()
   })
-  const { error } = schema.validate(data.email)
+  const { error } = schema.validate(emailobj)
   if (error) { return error } else { return null }
 }
 
 const nameValidation = (data) => {
+  const nameobj = { name: data.name }
   const schema = Joi.object({
     name: Joi.string().min(2).required()
   })
-  const { error } = schema.validate(data.name)
+  const { error } = schema.validate(nameobj)
   if (error) { return error } else { return null }
 }
 
 const passwordValidation = (data) => {
+  const passwordobj = { password: data.password }
   const schema = Joi.object({
     password: Joi.string().min(6).required()
   })
-  const { error } = schema.validate(data.password)
+  const { error } = schema.validate(passwordobj)
   if (error) { return error } else { return null }
 }
 
