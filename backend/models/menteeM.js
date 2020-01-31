@@ -34,6 +34,10 @@ const menteeSchema = new Schema({
 
   skills: [Skills],
 
+  online: {
+    type: Boolean
+  },
+
   date: {
     type: Date,
     default: Date.now

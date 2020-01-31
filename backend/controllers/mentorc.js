@@ -161,17 +161,6 @@ exports.register = async (req, res) => {
     })
   }
 
-  const nameExist = await Mentor.findOne({
-    name: req.body.name
-  })
-
-  if (nameExist) {
-    return res.status(200).json({
-      success: false,
-      msg: 'Name already exists'
-    })
-  }
-
   // Hash passwords
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(req.body.password, salt)
@@ -182,6 +171,7 @@ exports.register = async (req, res) => {
     email: req.body.email.toLowerCase(),
     password: hashedPassword,
     skills: [],
+    online: true,
     mentors: []
   })
 
@@ -247,14 +237,20 @@ exports.login = async (req, res) => {
   }
 
   // Create and assign a token
-  const TOKEN_SECRET = process.env.TOKEN_SECRET
-  const token = jwt.sign({
-    _id: user._id
-  }, TOKEN_SECRET)
-  res.status(200).json({
-    success: true,
-    userId: user._id,
-    authToken: token,
-    msg: 'Login sucessful!'
-  })
+  try {
+    user.online = true
+    await user.save()
+    const TOKEN_SECRET = process.env.TOKEN_SECRET
+    const token = jwt.sign({
+      _id: user._id
+    }, TOKEN_SECRET)
+    res.status(200).json({
+      success: true,
+      userId: user._id,
+      authToken: token,
+      msg: 'Login sucessful!'
+    })
+  } catch (err) {
+    res.status(200).json('Login unsuccesful')
+  }
 }
