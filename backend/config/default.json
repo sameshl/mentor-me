@@ -1,4 +1,4 @@
 {
-    "mongoURI": "mongodb://localhost:27017/mentor-me",   
+    "mongoURI": "mongodb+srv://mentorme:mentorme@mentor-me-ryhyv.mongodb.net/test?retryWrites=true&w=majority",   
     "tokenSecret": "extremely_secret_key"
 }
