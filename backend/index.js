@@ -1,7 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
-
+const cors = require('cors')
 // Set up env variables
 dotenv.config()
 
@@ -15,6 +15,7 @@ connectDB()
 // Middleware functions
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors())
 
 app.use('/api/mentor', require('./routes/mentor'))
 app.use('/api/mentee', require('./routes/mentee'))
