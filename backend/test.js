@@ -3,22 +3,23 @@ dotenv.config()
 const connectDB = require('./config/db')
 connectDB()
 const Mentee = require('./models/menteeM')
+const Mentor = require('./models/mentorM')
 
-const createObj = new Mentee({
+const createObj = new Mentor({
   name: 'SarveshS',
-  email: 'Sarvesh@gmail.com',
+  email: 'SarveshS@gmail.com',
   password: 'Sarvesh',
-  skills: [{ menteeskills: 'Javascript' }, { menteeskills: 'Express' }, { menteeskills: 'Backend' }],
-  mentors: [{ mentorid: '5e349da5ad127655b15eeb4c' }, { mentorid: '5e349d90ad127655b15eeb49' }],
+  skills: [{ mentorskills: 'Javascript' }, { mentorskills: 'Express' }, { mentorskills: 'Backend' }],
+  mentors: [{ menteeid: '5e349da5ad127655b15eeb4c' }, { menteeid: '5e349d90ad127655b15eeb49' }],
   online: true
 })
 console.log('HI')
 
 async function saveuser () {
-  console.log('HI')
+/*   console.log('HI')
   await createObj.save()
-  console.log('Saved')
-  const user = await Mentee.findOne({ email: 'Sarvesh@gmail.com' })
+  console.log('Saved') */
+  const user = await Mentor.findOne({ email: 'SarveshS@gmail.com' })
   console.log(user)
 }
 
