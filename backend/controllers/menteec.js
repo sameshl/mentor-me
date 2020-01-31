@@ -1,5 +1,6 @@
 const { match } = require('../utils/match')
 const Mentee = require('../models/menteeM')
+const Mentor = require('../models/mentorM')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const google = require('../utils/googleAuthentication')
@@ -286,19 +287,21 @@ exports.login = async (req, res) => {
 exports.getAllMentors = async (req, res) => {
   try {
     const mentee = await Mentee.findById(req.body.menteeId)
-    console.log(mentee)
+    // console.log(mentee)
     if (mentee) {
-      currentMentorsIds = mentee.mentors
-      currentMentorDetails = {}
-      currentMentorIds.forEach(element => {
-        var mentor = await Mentor.findById(element)
-        currentMentorDetails.append({
-          name: mentor.name,
-          id: mentor._id
-        })
-        return res.status(200).json({ success: true, currentMentorDetails: currentMentorDetails})
-      });
-      return res.status(200).json({ success: true, msg: 'Mentee deleted' })
+      var mentorids = mentee.mentors
+      // console.log(mentorids)
+      var currentMentorDetails = []
+      for (var i in mentorids) {
+        var mentorId = mentorids[i].mentorid
+        var mentor = await Mentor.findById(mentorId)
+        var createObj = {
+          mentorId: mentor._id,
+          mentorName: mentor.name
+        }
+        currentMentorDetails.push(createObj)
+      }
+      return res.status(200).json({ success: true, currentMentorDetails: currentMentorDetails })
     } else {
       return res.status(200).json({ success: false, msg: 'MenteeId is not valid' })
     }
