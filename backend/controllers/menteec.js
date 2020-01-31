@@ -281,3 +281,29 @@ exports.login = async (req, res) => {
     res.status(200).json('Login unsuccesful')
   }
 }
+
+// This function deletes mentee account
+exports.getAllMentors = async (req, res) => {
+  try {
+    const mentee = await Mentee.findById(req.body.menteeId)
+    console.log(mentee)
+    if (mentee) {
+      currentMentorsIds = mentee.mentors
+      currentMentorDetails = {}
+      currentMentorIds.forEach(element => {
+        var mentor = await Mentor.findById(element)
+        currentMentorDetails.append({
+          name: mentor.name,
+          id: mentor._id
+        })
+        return res.status(200).json({ success: true, currentMentorDetails: currentMentorDetails})
+      });
+      return res.status(200).json({ success: true, msg: 'Mentee deleted' })
+    } else {
+      return res.status(200).json({ success: false, msg: 'MenteeId is not valid' })
+    }
+  } catch (err) {
+    console.log(err)
+    return res.status(200).json({ success: false, msg: 'Server error' })
+  }
+}
