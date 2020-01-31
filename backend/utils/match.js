@@ -1,7 +1,7 @@
 const Mentor = require('../models/mentorM')
 // Better matching algorithms are to be updated here.
 exports.match = async (skills) => {
-  const mentorid = await find(skills)
+  const mentorid = await findv2(skills)
   if (mentorid) {
     return mentorid
   } else {
@@ -10,14 +10,27 @@ exports.match = async (skills) => {
   // A timeout is to be set before which the mentor has to respond before which a new mentor is to be matched.
 }
 
-async function find (skills) {
+/* async function find (skills) {
   // findOne will return only the first document it checks correctly so there can be better solutions.
   const mentor = await Mentor.findOne({ skills: { $all: skills } })
   return mentor._id
-}
-
-/* async function findv2 (skills) {
-  var mentors = await Mentor.find({ skills: { $all: skills } })
-  // Filter the mentors array obtained above for more accurate results.
-  return mentor._id
 } */
+
+async function findv2 (skills) {
+  if (skills.tech) {
+    var mentors = await Mentor.find({ skills: { $all: skills.tech } })
+  }
+  if (mentors) {
+    mentors = await mentors.find({ skills: { $all: skills.streams } })
+  } else { return null }
+  if (mentors) {
+    mentors = await mentors.find({ skills: { $all: skills.pl } })
+  } else { return null }
+  if (mentors) {
+    mentors = await mentors.find({ skills: { $all: skills.frameworks } })
+  } else { return null }
+  if (mentors) {
+    return mentors[0]
+  } else { return null }
+  // Filter the mentors array obtained above for more accurate results.
+}

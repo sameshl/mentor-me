@@ -19,9 +19,13 @@ exports.dashboard = async (req, res) => {
 // This function deletes mentee account
 exports.deleteacc = async (req, res) => {
   try {
-    const mentee = await Mentor.deleteOne({ _id: req.body('mentorID') })
-    if (mentee) return res.status(200).json({ success: true, msg: 'Mentor deleted' })
-    return res.status(200).json({ success: false, msg: 'Mentor not found' })
+    const mentor = await Mentor.findById(req.body('mentorid'))
+    if (mentor) {
+      await Mentor.deleteOne({ _id: req.body('mentorid') })
+      return res.status(200).json({ success: true, msg: 'Mentor deleted' })
+    } else {
+      return res.status(200).json({ success: false, msg: 'Mentor not found' })
+    }
   } catch (err) {
     return res.status(200).json({ success: false, msg: 'Server error' })
   }

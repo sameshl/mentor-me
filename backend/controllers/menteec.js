@@ -35,9 +35,13 @@ exports.query = async (req, res) => {
 // This function deletes mentee account
 exports.deleteacc = async (req, res) => {
   try {
-    const mentee = await Mentee.deleteOne({ _id: req.body('menteeID') })
-    if (mentee) return res.status(200).json({ success: true, msg: 'Mentee deleted' })
-    return res.status(200).json({ success: false, msg: 'Mentee not found' })
+    const mentee = await Mentee.findById(req.body('menteeid'))
+    if (mentee) {
+      await Mentee.deleteOne({ _id: req.body('menteeid') })
+      return res.status(200).json({ success: true, msg: 'Mentee deleted' })
+    } else {
+      return res.status(200).json({ success: false, msg: 'Mentee not found' })
+    }
   } catch (err) {
     return res.status(200).json({ success: false, msg: 'Server error' })
   }
