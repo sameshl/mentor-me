@@ -31,6 +31,34 @@ exports.deleteacc = async (req, res) => {
   }
 }
 
+// This function deletes mentee account
+exports.getAllMentors = async (req, res) => {
+  try {
+    const mentor = await Mentor.findById(req.body.mentorId)
+    // console.log(mentee)
+    if (mentor) {
+      var menteeids = mentor.mentees
+      // console.log(mentorids)
+      var currentMenteeDetails = []
+      for (var i in menteeids) {
+        var menteeId = menteeids[i].menteeid
+        var mentee = await Mentor.findById(menteeId)
+        var createObj = {
+          mentorId: mentee._id,
+          mentorName: mentee.name
+        }
+        currentMenteeDetails.push(createObj)
+      }
+      return res.status(200).json({ success: true, currentMentorDetails: currentMenteeDetails })
+    } else {
+      return res.status(200).json({ success: false, msg: 'MentorId is not valid' })
+    }
+  } catch (err) {
+    console.log(err)
+    return res.status(200).json({ success: false, msg: 'Server error' })
+  }
+}
+
 exports.googlelogin = async (req, res) => {
   // get code from redirect url
   const code = req.query.code

@@ -52,6 +52,34 @@ exports.deleteacc = async (req, res) => {
   }
 }
 
+// This function deletes mentee account
+exports.getAllMentors = async (req, res) => {
+  try {
+    const mentee = await Mentee.findById(req.body.menteeId)
+    // console.log(mentee)
+    if (mentee) {
+      var mentorids = mentee.mentors
+      // console.log(mentorids)
+      var currentMentorDetails = []
+      for (var i in mentorids) {
+        var mentorId = mentorids[i].mentorid
+        var mentor = await Mentor.findById(mentorId)
+        var createObj = {
+          mentorId: mentor._id,
+          mentorName: mentor.name
+        }
+        currentMentorDetails.push(createObj)
+      }
+      return res.status(200).json({ success: true, currentMentorDetails: currentMentorDetails })
+    } else {
+      return res.status(200).json({ success: false, msg: 'MenteeId is not valid' })
+    }
+  } catch (err) {
+    console.log(err)
+    return res.status(200).json({ success: false, msg: 'Server error' })
+  }
+}
+
 exports.googlelogin = async (req, res) => {
   // get code from redirect url
   const code = req.query.code
@@ -280,33 +308,5 @@ exports.login = async (req, res) => {
     })
   } catch (err) {
     res.status(200).json('Login unsuccesful')
-  }
-}
-
-// This function deletes mentee account
-exports.getAllMentors = async (req, res) => {
-  try {
-    const mentee = await Mentee.findById(req.body.menteeId)
-    // console.log(mentee)
-    if (mentee) {
-      var mentorids = mentee.mentors
-      // console.log(mentorids)
-      var currentMentorDetails = []
-      for (var i in mentorids) {
-        var mentorId = mentorids[i].mentorid
-        var mentor = await Mentor.findById(mentorId)
-        var createObj = {
-          mentorId: mentor._id,
-          mentorName: mentor.name
-        }
-        currentMentorDetails.push(createObj)
-      }
-      return res.status(200).json({ success: true, currentMentorDetails: currentMentorDetails })
-    } else {
-      return res.status(200).json({ success: false, msg: 'MenteeId is not valid' })
-    }
-  } catch (err) {
-    console.log(err)
-    return res.status(200).json({ success: false, msg: 'Server error' })
   }
 }
