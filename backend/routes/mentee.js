@@ -14,7 +14,7 @@ router.post('/login', mentee.login)
 router.get('/dashboard', verify, mentee.dashboard)
 
 // Ask for a new mentor
-router.post('/newmentor', verify, mentee.query)
+router.post('/newmentor', verify, mentee.newmentor)
 
 // Initiate chatbox
 // router.get('/mentee/chatbox', verify, both.chatox)

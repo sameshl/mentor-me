@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const google = require('../utils/googleAuthentication')
 
-// This function sends the user data of the user logged in
+// This function sends the user data of the user logged in.
 exports.dashboard = async (req, res) => {
   const userId = req.header('menteeId')
   if (!userId) return res.status(200).json({ success: false, msg: 'userId not provided' })
@@ -17,12 +17,13 @@ exports.dashboard = async (req, res) => {
   }
 }
 
-// This function matches a mentor and then saves it in the database
-exports.query = async (req, res) => {
+// This function finds a new mentor and sends it to front-end.
+exports.newmentor = async (req, res) => {
   // Front end should pass appropriate data so as to find mentee whose mentor has to be found(Session)
   try {
     // Get mentorId from match function
-    const mentorID = match(req.body.skills)
+    const mentorID = await match(req.body.skill)
+    // console.log(mentorID)
     if (mentorID) {
       res.status(200).json({ success: true, mentorId: mentorID }) // Send back the mentorId to send notification to the mentor
     } else {
