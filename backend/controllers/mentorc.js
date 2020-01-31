@@ -8,9 +8,9 @@ exports.dashboard = async (req, res) => {
   const userId = req.header('mentorId')
   if (!userId) return res.status(200).json({ success: false, msg: 'userId not provided' })
   try {
-    const mentor = await Mentor.findbyId(userId)
+    const mentor = await Mentor.findById(userId)
     // Only the information shown in the dashboard is too be passed
-    return res.status(200).json({ success: true }, mentor)
+    return res.status(200).json({ success: true, mentees: mentor.mentees })
   } catch (err) {
     return res.status(200).json({ success: false, msg: 'User not found' })
   }
@@ -19,9 +19,9 @@ exports.dashboard = async (req, res) => {
 // This function deletes mentee account
 exports.deleteacc = async (req, res) => {
   try {
-    const mentor = await Mentor.findById(req.body('mentorid'))
+    const mentor = await Mentor.findById(req.body.mentorId)
     if (mentor) {
-      await Mentor.deleteOne({ _id: req.body('mentorid') })
+      await Mentor.deleteOne({ _id: req.body.mentorId })
       return res.status(200).json({ success: true, msg: 'Mentor deleted' })
     } else {
       return res.status(200).json({ success: false, msg: 'Mentor not found' })
@@ -153,11 +153,12 @@ exports.register = async (req, res) => {
       msg: 'The password field entered is incorrect. The password should be atleast 6 digits long.'
     })
   }
+
   // Check if user already exists
   const emailExist = await Mentor.findOne({
     email: req.body.email.toLowerCase()
   })
-
+  // console.log(emailExist)
   if (emailExist) {
     return res.status(200).json({
       success: false,
@@ -179,6 +180,7 @@ exports.register = async (req, res) => {
     mentors: []
   })
 
+  // console.log(user)
   try {
     await user.save()
     // Create and assign a token

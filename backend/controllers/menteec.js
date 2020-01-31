@@ -9,9 +9,10 @@ exports.dashboard = async (req, res) => {
   const userId = req.header('menteeId')
   if (!userId) return res.status(200).json({ success: false, msg: 'userId not provided' })
   try {
-    const mentee = await Mentee.findbyId(userId)
-    res.status(200).json({ success: false }, mentee)
+    const mentee = await Mentee.findById(userId)
+    res.status(200).json({ success: true, mentors: mentee.mentors })
   } catch (err) {
+    // console.log(err)
     res.status(200).json({ success: false, msg: 'User not found' })
   }
 }
@@ -21,9 +22,9 @@ exports.query = async (req, res) => {
   // Front end should pass appropriate data so as to find mentee whose mentor has to be found(Session)
   try {
     // Get mentorId from match function
-    const mentorID = match(req.body('skills'))
+    const mentorID = match(req.body.skills)
     if (mentorID) {
-      res.status(200).json({ success: true }, mentorID) // Send back the mentorId to send notification to the mentor
+      res.status(200).json({ success: true, mentorId: mentorID }) // Send back the mentorId to send notification to the mentor
     } else {
       res.status(200).json({ success: false, msg: 'Mentor not found' })
     }
@@ -35,14 +36,16 @@ exports.query = async (req, res) => {
 // This function deletes mentee account
 exports.deleteacc = async (req, res) => {
   try {
-    const mentee = await Mentee.findById(req.body('menteeid'))
+    const mentee = await Mentee.findById(req.body.menteeId)
+    console.log(mentee)
     if (mentee) {
-      await Mentee.deleteOne({ _id: req.body('menteeid') })
+      await Mentee.deleteOne({ _id: req.body.menteeId })
       return res.status(200).json({ success: true, msg: 'Mentee deleted' })
     } else {
       return res.status(200).json({ success: false, msg: 'Mentee not found' })
     }
   } catch (err) {
+    console.log(err)
     return res.status(200).json({ success: false, msg: 'Server error' })
   }
 }
@@ -169,11 +172,12 @@ exports.register = async (req, res) => {
       msg: 'The password field entered is incorrect. The password should be atleast 6 digits long.'
     })
   }
+
   // Check if user already exists
   const emailExist = await Mentee.findOne({
     email: req.body.email.toLowerCase()
   })
-
+  // console.log(emailExist)
   if (emailExist) {
     return res.status(200).json({
       success: false,
@@ -266,7 +270,7 @@ exports.login = async (req, res) => {
     const token = jwt.sign({
       _id: user._id
     }, TOKEN_SECRET)
-    res.json({
+    res.status(200).json({
       success: true,
       userId: user._id,
       authToken: token,

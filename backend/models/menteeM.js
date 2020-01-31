@@ -44,5 +44,4 @@ const menteeSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('Mentees', menteeSchema)
-module.exports = mongoose.model('skills', Skills)
+module.exports = mongoose.model('mentees', menteeSchema)

@@ -1,14 +1,15 @@
 const mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
-const MenteeID = new mongoose.Schema({
+const MenteeID = new Schema({
   menteeid: String
 })
 
-const Skills = new mongoose.Schema({
+const Skills = new Schema({
   mentorskills: String
 })
 
-const mentorSchema = new mongoose.Schema({
+const mentorSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -43,4 +44,4 @@ const mentorSchema = new mongoose.Schema({
   }
 })
 
-module.exports = mongoose.model('Mentors', mentorSchema)
+module.exports = mongoose.model('mentors', mentorSchema)
