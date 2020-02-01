@@ -13,6 +13,9 @@ router.post('/login', mentor.login)
 // Dashboard for mentor
 router.get('/dashboard', verify, mentor.dashboard)
 
+// Fetch mentee email
+router.get('/fetchemail', verify, mentor.fetchemail)
+
 // Switch the availaibilty of mentors
 router.post('/available', verify, mentor.available)
 
