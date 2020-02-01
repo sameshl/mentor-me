@@ -1,4 +1,5 @@
 const Mentor = require('../models/mentorM')
+const Mentee = require('../models/menteeM')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 // const google = require('../utils/googleAuthentication')
@@ -49,6 +50,34 @@ exports.available = async (req, res) => {
       return res.status(200).json({ success: false, msg: 'User not found' })
     }
   } catch (err) {
+    return res.status(200).json({ success: false, msg: 'Server error' })
+  }
+}
+
+exports.getAllMentees = async (req, res) => {
+  try {
+    const mentor = await Mentor.findById(req.body.mentorId)
+    // console.log(mentee)
+    if (mentor) {
+      var menteeids = mentor.mentees
+      // console.log(mentorids)
+      var currentMenteeDetails = []
+      for (var i in menteeids) {
+        var menteeId = menteeids[i].menteeid
+        var mentee = await Mentee.findById(menteeId)
+        if(!mentee) { return res.status(200).json({ success: false }) }
+        var createObj = {
+          menteeId: mentee._id,
+          menteeName: mentee.name
+        }
+        currentMenteeDetails.push(createObj)
+      }
+      return res.status(200).json({ success: true, currentMenteeDetails: currentMenteeDetails })
+    } else {
+      return res.status(200).json({ success: false, msg: 'MenteeId is not valid' })
+    }
+  } catch (err) {
+    console.log(err)
     return res.status(200).json({ success: false, msg: 'Server error' })
   }
 }

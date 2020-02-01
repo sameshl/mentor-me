@@ -10,6 +10,9 @@ router.post('/register', mentor.register)
 // Login for mentors
 router.post('/login', mentor.login)
 
+// get the list of mentors for a given mentee
+router.get('/getallmentees', verify, mentor.getAllMentees)
+
 // Dashboard for mentor
 router.get('/dashboard', verify, mentor.dashboard)
 

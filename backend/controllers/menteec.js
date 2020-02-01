@@ -171,6 +171,7 @@ exports.getAllMentors = async (req, res) => {
       for (var i in mentorids) {
         var mentorId = mentorids[i].mentorid
         var mentor = await Mentor.findById(mentorId)
+        if(!mentee) { return res.status(200).json({ success: false }) }
         var createObj = {
           mentorId: mentor._id,
           mentorName: mentor.name
