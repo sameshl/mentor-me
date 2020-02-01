@@ -17,7 +17,7 @@ router.get('/getallmentors', verify, mentee.getAllMentors)
 router.post('/newmentor', verify, mentee.newmentor)
 
 // Initiate chatbox
-// router.get('/mentee/chatbox', verify, both.chatox)
+// router.get('/mentee/chatbox', verify, both.chatbox)
 
 // Delete account
 router.delete('/deleteacc', verify, mentee.deleteacc)

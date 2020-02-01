@@ -14,8 +14,8 @@ async function find (skills) {
   // findOne will return only the first document it checks correctly so there can be better solutions.
   try {
     // const mentor = await Mentor.findOne({ skills: { $all: { mentorskills: 'Javascript' } } })
-    const mentor = await Mentor.findOne({ "skills.mentorskills": skills })
-    console.log(mentor._id)
+    const mentor = await Mentor.findOne({ "skills.mentorskills": skills, online: true, available: true })
+    // console.log(mentor._id)
     return mentor._id
   } catch (err) {
     // console.log(err)

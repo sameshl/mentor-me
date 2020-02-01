@@ -13,6 +13,9 @@ router.post('/login', mentor.login)
 // Dashboard for mentor
 router.get('/dashboard', verify, mentor.dashboard)
 
+// Switch the availaibilty of mentors
+router.post('/available', verify, mentor.available)
+
 // Initiate chat
 // router.get('/mentor/chatbox', verify, both.chatbox)
 

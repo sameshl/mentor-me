@@ -32,6 +32,11 @@ const mentorSchema = new Schema({
 
   mentees: [MenteeID],
 
+  available: {
+    type: Boolean,
+    default: true
+  },
+
   skills: [Skills],
 
   online: {
