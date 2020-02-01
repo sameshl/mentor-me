@@ -16,6 +16,9 @@ router.get('/getallmentors', verify, mentee.getAllMentors)
 // Ask for a new mentor
 router.post('/newmentor', verify, mentee.newmentor)
 
+// Fetch mentee email
+router.get('/fetchemail', verify, mentee.fetchemail)
+
 // Initiate chatbox
 // router.get('/mentee/chatbox', verify, both.chatbox)
 

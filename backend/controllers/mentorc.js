@@ -4,6 +4,17 @@ const jwt = require('jsonwebtoken')
 // const google = require('../utils/googleAuthentication')
 const { google } = require('googleapis')
 
+// This function fetches email
+exports.fetchemail = async (req, res) => {
+  const userid = req.body.mentorId
+  try {
+    const user = await Mentor.findById(userid)
+    return res.status(200).json({ success: true, email: user.email })
+  } catch (err) {
+    return res.status(200).json({ success: false, msg: 'User not found.' })
+  }
+}
+
 // This function sends the user data of the user logged in
 exports.dashboard = async (req, res) => {
   const userId = req.header('mentorId')

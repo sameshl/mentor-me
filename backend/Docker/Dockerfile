@@ -9,9 +9,6 @@ COPY package*.json ./
 
 RUN npm install
 
-RUN ./node_modules/.bin/web-push generate-vapid-keys
-#ENV <KEY>=<VALUE> where VALUE is the vapid key generated
-
 COPY . /app
 
 EXPOSE 5000
