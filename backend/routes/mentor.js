@@ -16,6 +16,14 @@ router.get('/dashboard', verify, mentor.dashboard)
 // Initiate chat
 // router.get('/mentor/chatbox', verify, both.chatbox)
 
+// @route   GET api/mentor/login/google
+// @desc    route for google Oauth 2 login
+router.get('/login/google', mentor.googleAuth)
+
+// @route   GET api/mentor/login/google/auth/google/callback
+// @desc    route for getting user data and redirecting to dashboard
+router.get('/login/google/auth/google/callback', mentor.googleAuthCallback)
+
 // Delete account
 router.delete('/deleteacc', verify, mentor.deleteacc)
 

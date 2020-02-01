@@ -3,7 +3,8 @@ const Mentee = require('../models/menteeM')
 const Mentor = require('../models/mentorM')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const google = require('../utils/googleAuthentication')
+// const google = require('../utils/googleAuthentication')
+const { google } = require('googleapis');
 
 // This function sends the user data of the user logged in.
 exports.dashboard = async (req, res) => {
@@ -16,6 +17,93 @@ exports.dashboard = async (req, res) => {
     // console.log(err)
     res.status(200).json({ success: false, msg: 'User not found' })
   }
+}
+
+// Set up appropriate env variables before deploying
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URL_1 = process.env.REDIRECT_URL_1;
+
+const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URL_1);
+
+// Scope of data of user to access
+const defaultScope = ['profile', 'email'];
+
+// This function google auth mentee account
+exports.googleAuth = async (req, res) => {
+        // Generate an OAuth URL and redirect there
+        const url = oAuth2Client.generateAuthUrl({
+            access_type: 'offline',
+            scope: defaultScope
+        });
+        //If redirect not possible, we can send url to frontend
+        res.redirect(url);
+}
+
+// This function is callback for google auth mentee account
+exports.googleAuthCallback = async (req, res) => {
+   // get code from redirect url
+   const code = req.query.code
+   if (code) {
+       // Get an access token based on our OAuth code
+       oAuth2Client.getToken(code, async function (err, tokens) {
+           if (err) {
+               res.json('Error authenticating');
+           } else {
+               console.log('Successfully authenticated');
+               oAuth2Client.setCredentials(tokens);
+               const people = google.people({ version: 'v1', auth: oAuth2Client});
+               const me = await people.people.get({ 
+                       auth: oAuth2Client,
+                       resourceName: 'people/me', 
+                       personFields: 'names,emailAddresses',
+                    });
+
+               userName = me.data.names[0].displayName;
+               userEmail = me.data.emailAddresses[0].value;
+               
+               const emailExist = await Mentee.findOne({
+                   email: userEmail.toLowerCase()
+                 });
+                 
+               // Create a user in database if user does not exist already
+               if ( !emailExist ) {
+                   // Create a new user
+                   const mentee = new Mentee({
+                       name: userName,
+                       email: userEmail.toLowerCase(),
+                       password: 'googleauthenticated',
+                       skills: [],
+                       online: true,
+                       mentors: []
+                   });
+                   try {
+                       await mentee.save();
+                   } catch (err) {
+                       res.status(200).json({
+                         "success": false,
+                         "msg": err,
+                        });
+                   }
+
+               }
+
+               // Now get that user's id
+               const mentee = await Mentee.findOne({
+                   email: userEmail.toLowerCase()
+                 });
+
+           // Create and assign a token
+           const TOKEN_SECRET = process.env.TOKEN_SECRET
+           const token = jwt.sign({_id: mentee._id}, TOKEN_SECRET);
+           res.status(200).json({
+               "success":true,
+               "userId": mentee._id,
+               "authToken": token
+             });
+           }
+       });
+   }
 }
 
 // This function finds a new mentor and sends it to front-end.

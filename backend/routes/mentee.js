@@ -22,13 +22,13 @@ router.post('/newmentor', verify, mentee.newmentor)
 // Delete account
 router.delete('/deleteacc', verify, mentee.deleteacc)
 
-// @route   GET api/login/google/
+// @route   GET api/mentee/login/google
 // @desc    route for google Oauth 2 login
-router.get('/google', both.googleapi)
+router.get('/login/google', mentee.googleAuth)
 
-// @route   GET api/login/google/auth/google/callback
+// @route   GET api/mentee/login/google/auth/google/callback
 // @desc    route for getting user data and redirecting to dashboard
-router.get('/auth/google/callback', mentee.googlelogin)
+router.get('/login/google/auth/google/callback', mentee.googleAuthCallback)
 
 // @route   POST api/login/google/android
 // @desc    route for android client to send oauth tokens in body
