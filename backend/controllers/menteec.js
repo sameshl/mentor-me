@@ -1,6 +1,11 @@
 const { match } = require('../utils/match')
-const Mentee = require('../models/menteeM')
-const Mentor = require('../models/mentorM')
+const { mentees, mentorid } = require('../models/menteeM')
+const { mentors, menteeid } = require('../models/mentorM')
+const Mentor = mentors
+const Mentee = mentees
+const Mentorid = mentorid
+const Menteeid = menteeid
+const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 // const google = require('../utils/googleAuthentication')
@@ -119,18 +124,20 @@ exports.googleAuthCallback = async (req, res) => {
 // This function finds a new mentor and sends it to front-end.
 exports.newmentor = async (req, res) => {
   // Front end should pass appropriate data so as to find mentee whose mentor has to be found(Session)
-  const menteeID = req.body.menteeId
+  const email = req.body.email
   try {
     // Get mentorId from match function
     const mentorID = await match(req.body.skill)
     // console.log(mentorID)
     if (mentorID) {
-      const mentor = await Mentor.findOne({ _id: mentorID })
-      const mentee = await Mentee.findOne({ _id: menteeID })
-      // console.log(mentor)
-      // console.log(mentee)
-      await mentee.mentors.push(mentor)
-      await mentor.mentees.push(mentee)
+      const mentor = await mentors.findById(mentorID)
+      const mentee = await mentees.findOne({email: email})
+      const mentordoc = new Mentorid({ mentorEmail: mentor.email })
+      const menteedoc = new Menteeid({ menteeEmail: mentee.email })
+      console.log(mentor)
+      console.log(mentee)
+      await mentee.mentors.push(mentordoc)
+      await mentor.mentees.push(menteedoc)
 
       return res.status(200).json({ success: true })
     } else {

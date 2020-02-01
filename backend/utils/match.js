@@ -1,4 +1,5 @@
-const Mentor = require('../models/mentorM')
+const { mentors } = require('../models/mentorM')
+const Mentor = mentors
 // Better matching algorithms are to be updated here.
 exports.match = async (skills) => {
   const mentorid = await find(skills)

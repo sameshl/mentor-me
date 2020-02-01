@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 var Schema = mongoose.Schema
 
 const MenteeID = new Schema({
-  menteeid: String
+  menteeEmail: String
 })
 
 const Skills = new Schema({
@@ -49,4 +49,5 @@ const mentorSchema = new Schema({
   }
 })
 
-module.exports = mongoose.model('mentors', mentorSchema)
+module.exports.mentors = mongoose.model('mentors', mentorSchema)
+module.exports.menteeid = mongoose.model('menteeid', MenteeID)
