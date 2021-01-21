@@ -28,6 +28,6 @@
     "googleapis": "^46.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.8.7",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   }
 }
